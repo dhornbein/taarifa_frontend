@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+
+<head>
+	<meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title></title>
+
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/foundation.min.css" />
+  <link rel="stylesheet" href="site.css" />
+  
+  <script src="js/vendor/custom.modernizr.js"></script>
+
+</head>
+<body>
+
+	<div class="row">
+		<div class="large-12 columns">
+			<h2>Taarifa API Test</h2>
+		</div>
+	</div>
+
+	<div class="row">
+		<form class="large-12 column">
+			<fieldset>
+				<legend>API Base URL</legend>
+				<input id="baseUrl" type="url" name="apibase" required>
+			</fieldset>
+		</form>
+	</div>
+	<div class="row">
+		<form action="/reports" data-method="GET" class="large-6 columns">
+			<fieldset>
+				<legend>Look up report <small class="baseUrlDisplay"></small><small class="uriDisplay"></small></legend>
+				<input type="text" name="report_id">
+				<input type="submit" class="button">
+			</fieldset>
+		</form>
+		<form action="/reports" data-method="POST" class="large-6 columns">
+			<fieldset>
+				<legend>Add report <small class="baseUrlDisplay"></small><small class="uriDisplay"></small></legend>
+				<label for="title">Title</label>
+				<input type="text" name="title" required>
+				<div class="row">
+					<div class="large-6 columns">
+						<label for="latitude">Latitude</label>
+						<input type="text" name="latitude" required>
+					</div>
+					<div class="large-6 columns">
+						<label for="longitude">Longitude</label>
+						<input type="text" name="longitude" required>
+					</div>
+				</div>
+				<input type="submit" class="button">
+			</fieldset>
+		</form>
+	</div>
+
+  <script>
+  document.write('<script src=' +
+  ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
+  '.js><\/script>')
+  </script>
+  
+  <script src="js/foundation.min.js"></script>
+  <script src="js/site.js"></script>
+  <!--
+  
+  <script src="js/foundation/foundation.js"></script>
+  
+  <script src="js/foundation/foundation.dropdown.js"></script>
+  
+  <script src="js/foundation/foundation.placeholder.js"></script>
+  
+  <script src="js/foundation/foundation.forms.js"></script>
+  
+  <script src="js/foundation/foundation.reveal.js"></script>
+  
+  <script src="js/foundation/foundation.tooltips.js"></script>
+  
+  <script src="js/foundation/foundation.clearing.js"></script>
+  
+  <script src="js/foundation/foundation.section.js"></script>
+  
+  <script src="js/foundation/foundation.topbar.js"></script>
+  
+  -->
+  
+  <script>
+    $(document).foundation();
+
+$('form').submit(function() { return false });
+
+var baseUrl = '';
+var queryString = {};
+
+setBaseUrl('#baseUrl','.baseUrlDisplay');
+
+function setBaseUrl (watch,target) {
+	$(watch).keyup(function() {
+		$(target).text( $(watch).val() );
+		baseUrl = $(watch).val();
+	});
+
+}
+
+$('form').each(function(){
+	$('.uriDisplay',this).text( $(this).attr('action') + ' ' + $(this).data('method') );
+})
+
+$('form').submit(function() {
+	$('input',this).not('input[type=button], input[type=submit], input[type=reset]')
+	.each(function() {
+		if( $(this).val() != '' ) {
+			queryString[$(this).attr('name')] = $(this).val();
+		}
+	});
+
+	var method = $(this).data('method');
+	var action = $(this).attr('action');
+	var apiUrl = baseUrl + action;
+	console.log('sending: ' + apiUrl);
+	console.log(queryString);
+
+	$.ajax({
+		type: method,
+		url: apiUrl,
+		data: queryString
+	}).done(function( data ) {
+		console.log(data);
+	});
+
+	return false;
+})
+
+// function query(baseUrl, query) {
+// 	$.getJSON( baseUrl, query)
+// 	.done(function( data ) {
+// 		$.each( data.items, function( i, item ) {
+// 			$( "<img/>" ).attr( "src", item.media.m ).appendTo( "#images" );
+// 			if ( i === 3 ) {
+// 				return false;
+// 			}
+// 		});
+// 	});
+// }
+
+  </script>
+</body>
+</html>
